@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일공푸드 | 주간 매출 성과 리포트</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f3f4f6; }
+        .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                    10
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900">일공푸드 (스마트스토어)</h1>
+                    <p class="text-sm text-gray-500">주간 매출 및 인사이트 리포트 | 분석: 더큐알(The QR)</p>
+                </div>
+            </div>
+            <div class="text-right hidden sm:block">
+                <p class="text-sm font-medium text-gray-900">기준 일자</p>
+                <p class="text-xs text-gray-500">2026.02.09 ~ 2026.02.11</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Summary Alert -->
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 rounded-r-lg flex items-start shadow-sm">
+            <div class="flex-shrink-0">
+                <i class="fa-solid fa-circle-info text-blue-500 mt-0.5"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-blue-800">핵심 요약 (Executive Summary)</h3>
+                <div class="mt-1 text-sm text-blue-700">
+                    <p>설 연휴 배송 마감(2/12)에 따른 막차 수요와 제철 생굴의 폭발적 인기가 결합되어, 전주 동기 대비 <strong>매출이 46% 수직 상승</strong>했습니다. 페이스북 광고 기여도는 낮으며, 오가닉 및 재구매 트래픽이 주요했습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Card 1 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">이번 주 결제 금액 (월~수)</h2>
+                    <div class="p-2 bg-green-100 rounded-lg text-green-600">
+                        <i class="fa-solid fa-won-sign"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline">
+                    <p class="text-3xl font-bold text-gray-900">30,705,370</p>
+                    <p class="ml-1 text-sm text-gray-500">원</p>
+                </div>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-green-500 font-semibold flex items-center">
+                        <i class="fa-solid fa-arrow-trend-up mr-1"></i> 46.3%
+                    </span>
+                    <span class="ml-2 text-gray-400">vs 지난주 (20,987,820원)</span>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">결제자 수</h2>
+                    <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline">
+                    <p class="text-3xl font-bold text-gray-900">917</p>
+                    <p class="ml-1 text-sm text-gray-500">명</p>
+                </div>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-green-500 font-semibold flex items-center">
+                        <i class="fa-solid fa-arrow-trend-up mr-1"></i> 19.8%
+                    </span>
+                    <span class="ml-2 text-gray-400">vs 지난주 (765명)</span>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">1위 상품 매출 비중</h2>
+                    <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline">
+                    <p class="text-3xl font-bold text-gray-900">86.8</p>
+                    <p class="ml-1 text-sm text-gray-500">%</p>
+                </div>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-gray-600 font-medium">통영 생굴 제철 굴 1kg</span>
+                    <span class="ml-2 text-gray-400">(약 7,138만 원)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Sales Chart -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">주간 요일별 결제금액 비교 (월~수)</h2>
+                <div class="relative h-64 w-full">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Product Share Chart -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">상품별 누적 매출 비중 (2/1~2/11)</h2>
+                <div class="relative h-64 w-full flex justify-center">
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Insights Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Insight 1 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-magnifying-glass-chart text-xl text-indigo-500 mr-2"></i>
+                    <h2 class="text-lg font-bold text-gray-800">마케팅 & 유입 분석</h2>
+                </div>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <div class="flex-shrink-0 mt-1"><i class="fa-solid fa-check text-green-500"></i></div>
+                        <div class="ml-3">
+                            <h4 class="text-sm font-semibold text-gray-800">유입 트래픽 우상향</h4>
+                            <p class="text-sm text-gray-600 mt-1">2월 9일(월) 기점으로 전체 유입량이 눈에 띄게 상승했습니다. 네이버페이, 플러스스토어, 가격비교 등 오가닉/직접 유입의 비중이 압도적입니다.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="flex-shrink-0 mt-1"><i class="fa-solid fa-triangle-exclamation text-yellow-500"></i></div>
+                        <div class="ml-3">
+                            <h4 class="text-sm font-semibold text-gray-800">페이스북 광고 효율성 저조</h4>
+                            <p class="text-sm text-gray-600 mt-1">최근 3일간 약 3.6만 원 소진하여 랜딩 페이지 조회 46회를 기록했습니다. 유입 단가(CPC/CPA)는 나쁘지 않으나 전체 트래픽(약 2,500명/일) 대비 기여도는 미미합니다.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="flex-shrink-0 mt-1"><i class="fa-solid fa-users-viewfinder text-blue-500"></i></div>
+                        <div class="ml-3">
+                            <h4 class="text-sm font-semibold text-gray-800">타겟 미스매치 가능성</h4>
+                            <p class="text-sm text-gray-600 mt-1">페이스북 광고 타겟이 25-34세에 집중되어 있으나, '제철 굴/명절 선물'의 실제 고관여 구매층은 3040 이상일 확률이 높습니다.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 이번 성과의 이유 -->
+            <div class="bg-gray-800 rounded-xl shadow-sm p-6 text-white border border-gray-700">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-trophy text-xl text-yellow-400 mr-2"></i>
+                    <h2 class="text-lg font-bold">이번 성과의 핵심 이유</h2>
+                </div>
+                <div class="space-y-5">
+                    <div class="bg-gray-700 bg-opacity-50 p-4 rounded-lg">
+                        <h4 class="text-sm font-bold text-yellow-300 mb-1">1. 배송 마감 공지 효과 (FOMO 마케팅)</h4>
+                        <p class="text-sm text-gray-300">2/12(목) 설 연휴 마지막 발송 공지가 결정적이었습니다. 고객들에게 "지금 주문해야 명절에 먹을 수 있다"는 심리적 압박(FOMO)을 주어 월~수 3일간 막차 주문이 폭주했습니다.</p>
+                    </div>
+                    <div class="bg-gray-700 bg-opacity-50 p-4 rounded-lg">
+                        <h4 class="text-sm font-bold text-blue-300 mb-1">2. 제철 상품과 명절 대목의 완벽한 시너지</h4>
+                        <p class="text-sm text-gray-300">2월 제철 끝물인 '생굴'의 수요와 명절 가족 모임용 특식(프리미엄 식재료)을 찾는 니즈가 완벽하게 맞물렸습니다. 시즌 타이밍과 스토어 주력 상품의 핏(Fit)이 훌륭했습니다.</p>
+                    </div>
+                    <div class="bg-gray-700 bg-opacity-50 p-4 rounded-lg">
+                        <h4 class="text-sm font-bold text-green-300 mb-1">3. 탄탄한 오가닉(자연) 유입의 저력</h4>
+                        <p class="text-sm text-gray-300">매출의 대부분이 외부 유료 광고가 아닌 네이버 쇼핑 내 자연 검색, 네이버페이, 플러스스토어를 통해 발생했습니다. 제품력이 뒷받침된 재구매 및 자연 유입 기반의 매우 건강한 매출 구조입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-500">
+            &copy; 2026 The QR. All rights reserved. | Prepared for 일공푸드 대표 정영민
+        </div>
+    </footer>
+
+    <!-- Chart.js Initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Bar Chart (Sales Comparison)
+            const ctxSales = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctxSales, {
+                type: 'bar',
+                data: {
+                    labels: ['수요일', '화요일', '월요일'],
+                    datasets: [
+                        {
+                            label: '이번 주 (02.09~02.11)',
+                            data: [13389860, 9122130, 8193380],
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)', // Blue-500
+                            borderColor: 'rgb(59, 130, 246)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: '지난 주 (02.02~02.04)',
+                            data: [7844280, 6963250, 6180290],
+                            backgroundColor: 'rgba(156, 163, 175, 0.5)', // Gray-400
+                            borderColor: 'rgb(156, 163, 175)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 10000) + '만';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Doughnut Chart (Product Share)
+            const ctxProduct = document.getElementById('productChart').getContext('2d');
+            new Chart(ctxProduct, {
+                type: 'doughnut',
+                data: {
+                    labels: ['생굴 1kg', '홍가리비', '멍게/기타', '새우/장어류'],
+                    datasets: [{
+                        data: [86.8, 3.0, 2.3, 7.9],
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.9)',  // Indigo
+                            'rgba(244, 63, 94, 0.8)',   // Rose
+                            'rgba(16, 185, 129, 0.8)',  // Emerald
+                            'rgba(245, 158, 11, 0.8)'   // Amber
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
