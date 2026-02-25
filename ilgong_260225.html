@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일공푸드 비수기 매출 증대 전략 보고서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f3f4f6; }
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover { transition: transform 0.2s, box-shadow 0.2s; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                    10
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">일공푸드 <span class="text-blue-600">비수기 돌파 전략</span></h1>
+                    <p class="text-xs text-gray-500 mt-1">제안/보고: (주)더큐알 (일공푸드) | 2026.03 - 2026.10</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-4 text-sm font-medium text-gray-500">
+                <span><i class="fas fa-camera mr-1 text-blue-500"></i>더큐알 콘텐츠팀 지원</span>
+                <span><i class="fas fa-chart-line mr-1 text-red-500"></i>매출 70% 방어 타겟</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Section 1: Situation Analysis -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover md:col-span-1">
+                <h2 class="text-lg font-bold mb-4 flex items-center text-gray-800"><i class="fas fa-exclamation-triangle text-amber-500 mr-2"></i>현재 상황 진단</h2>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">생굴 매출 의존도</span><span class="text-red-500 font-bold">70%</span></div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-red-500 h-2.5 rounded-full" style="width: 70%"></div></div>
+                        <p class="text-xs text-gray-500 mt-2">3월 기점으로 급격한 매출 하락 예상. 대체재를 통한 포트폴리오 다각화가 시급합니다.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl p-6 shadow-sm border border-gray-100 card-hover md:col-span-2 text-white">
+                <h2 class="text-lg font-bold mb-2 flex items-center"><i class="fas fa-bullseye text-blue-300 mr-2"></i>더큐알만의 차별화된 타개책</h2>
+                <p class="text-blue-100 mb-4 text-sm leading-relaxed">
+                    일반적인 수산물 스토어와 달리, 일공푸드의 본사는 <strong class="text-white">전문 콘텐츠 제작사 '더큐알'</strong>입니다. 
+                    단순 마케팅 비용을 태우는 것을 넘어, 촬영팀(3명)과 콘텐츠팀(3명)의 역량을 활용해 
+                    <strong class="text-yellow-300">"압도적인 시각적 퍼포먼스(숏폼, 고화질 릴스, 기획형 상세페이지)"</strong>로 전환율을 극대화하는 것이 핵심 전략입니다.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <div class="bg-white/10 p-3 rounded-lg text-center backdrop-blur-sm">
+                        <i class="fas fa-video text-2xl mb-1 text-blue-200"></i>
+                        <div class="text-xs font-bold">현장감 넘치는 영상</div>
+                    </div>
+                    <div class="bg-white/10 p-3 rounded-lg text-center backdrop-blur-sm">
+                        <i class="fas fa-search-dollar text-2xl mb-1 text-blue-200"></i>
+                        <div class="text-xs font-bold">SEO/트래픽 작업</div>
+                    </div>
+                    <div class="bg-white/10 p-3 rounded-lg text-center backdrop-blur-sm">
+                        <i class="fas fa-truck-fast text-2xl mb-1 text-blue-200"></i>
+                        <div class="text-xs font-bold">N도착보장 락인</div>
+                    </div>
+                    <div class="bg-white/10 p-3 rounded-lg text-center backdrop-blur-sm">
+                        <i class="fas fa-box-open text-2xl mb-1 text-blue-200"></i>
+                        <div class="text-xs font-bold">객단가 상승 묶음배송</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Product Roadmap -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h2 class="text-xl font-bold mb-6 flex items-center text-gray-800"><i class="far fa-calendar-alt text-blue-500 mr-2"></i>비수기(3월~10월) 품목별 판매 로드맵</h2>
+            <div class="overflow-x-auto pb-4">
+                <table class="min-w-full text-sm text-left">
+                    <thead class="text-xs text-gray-600 uppercase bg-gray-50 rounded-t-lg">
+                        <tr>
+                            <th class="px-4 py-3 font-bold">품목</th>
+                            <th class="px-2 py-3 text-center">3월</th>
+                            <th class="px-2 py-3 text-center">4월</th>
+                            <th class="px-2 py-3 text-center">5월</th>
+                            <th class="px-2 py-3 text-center">6월</th>
+                            <th class="px-2 py-3 text-center">7월</th>
+                            <th class="px-2 py-3 text-center">8월</th>
+                            <th class="px-2 py-3 text-center">9월</th>
+                            <th class="px-2 py-3 text-center">10월</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900"><span class="w-3 h-3 rounded-full bg-orange-400 inline-block mr-2"></span>홍가리비</td>
+                            <td class="px-2 py-3 bg-orange-100 text-center rounded-l-md font-bold text-orange-700">집중</td><td class="px-2 py-3 bg-orange-50"></td><td class="px-2 py-3 bg-orange-50"></td><td class="px-2 py-3 bg-orange-50"></td><td class="px-2 py-3 bg-orange-50"></td><td class="px-2 py-3 bg-orange-50"></td><td class="px-2 py-3 bg-orange-50"></td><td class="px-2 py-3 bg-orange-50 rounded-r-md"></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900"><span class="w-3 h-3 rounded-full bg-red-500 inline-block mr-2"></span>멍게</td>
+                            <td class="px-2 py-3 bg-red-100 text-center rounded-l-md">봄시즌</td><td class="px-2 py-3 bg-red-100 text-center font-bold text-red-700">제철</td><td class="px-2 py-3 bg-red-100 text-center font-bold text-red-700">제철</td><td class="px-2 py-3 bg-red-50 text-center rounded-r-md">마감</td><td colspan="4"></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900"><span class="w-3 h-3 rounded-full bg-gray-700 inline-block mr-2"></span>민물장어</td>
+                            <td class="px-2 py-3 bg-gray-100 text-center rounded-l-md">시작</td><td class="px-2 py-3 bg-gray-200"></td><td class="px-2 py-3 bg-gray-200 text-center font-bold">캠핑철</td><td class="px-2 py-3 bg-gray-200"></td><td class="px-2 py-3 bg-gray-300 text-center font-bold text-black">복날특수</td><td class="px-2 py-3 bg-gray-300"></td><td class="px-2 py-3 bg-gray-100 text-center rounded-r-md">마감</td><td></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block mr-2"></span>바다장어</td>
+                            <td></td><td class="px-2 py-3 bg-blue-100 text-center rounded-l-md">시작</td><td class="px-2 py-3 bg-blue-100"></td><td class="px-2 py-3 bg-blue-100 text-center font-bold text-blue-700">보양식</td><td class="px-2 py-3 bg-blue-200 text-center font-bold text-blue-800">최성수기</td><td class="px-2 py-3 bg-blue-100 text-center rounded-r-md">마감</td><td></td><td></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900"><span class="w-3 h-3 rounded-full bg-pink-400 inline-block mr-2"></span>흰다리새우</td>
+                            <td colspan="5"></td><td class="px-2 py-3 bg-pink-100 text-center rounded-l-md">시작</td><td class="px-2 py-3 bg-pink-200 text-center font-bold text-pink-700">추석/캠핑</td><td class="px-2 py-3 bg-pink-100 text-center rounded-r-md"></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block mr-2"></span>자연산 돌문어 (New)</td>
+                            <td colspan="8" class="px-2 py-3 text-center text-gray-400 italic">업체 협의 완료 시 즉시 오픈 (상시 판매 목표)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900"><span class="w-3 h-3 rounded-full bg-teal-500 inline-block mr-2"></span>냉동/건어물/장류</td>
+                            <td colspan="8" class="px-2 py-3 text-center bg-teal-50 text-teal-700 font-medium rounded-md">비수기 상시 캐시카우 (N도착보장 및 묶음배송 활용)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 3: 4 Core Strategies -->
+        <h2 class="text-2xl font-bold mt-10 mb-6 text-gray-800">4대 비수기 돌파 액션 플랜</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Strategy 1 -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">우선순위 1위</div>
+                <h3 class="text-lg font-bold mb-3 flex items-center text-blue-700"><span class="bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mr-2">1</span> 상위 노출 & 마케팅 (홍가리비/장어)</h3>
+                <p class="text-sm text-gray-600 mb-4 line-clamp-2">단기적인 리워드 트래픽 작업과 함께, 실제 구매 전환율을 극대화할 수 있는 마케팅팀의 체류시간 연장 기획이 필수입니다.</p>
+                <ul class="space-y-3 text-sm text-gray-700">
+                    <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> <strong>홍가리비 (3월 집중) :</strong> 봄철 캠핑족을 타겟으로 한 키워드(캠핑용 조개, 바베큐 가리비 등) 세팅. 리뷰 이벤트를 공격적으로 진행하여 단기 트래픽(리워드 등) 유입 시 전환율을 방어해야 합니다.</li>
+                    <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> <strong>장어 (3월~8월) :</strong> '기력회복', '보양식' 키워드 선점. 당사(더큐알) 촬영팀을 활용해 장어가 그릴 위에서 지글거리는 <b>초고화질 GIF/숏폼</b>을 상세페이지 최상단에 배치하여 전환율을 극대화합니다.</li>
+                    <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> <strong>안전한 리워드 :</strong> 트래픽 어뷰징보다는 '네이버 쇼핑라이브' 숏클립 연동이나 카페/블로그 체험단 배포를 통한 자연스러운 가구매 유도가 롱런의 핵심입니다.</li>
+                </ul>
+            </div>
+
+            <!-- Strategy 2 -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover relative overflow-hidden">
+                <h3 class="text-lg font-bold mb-3 flex items-center text-purple-700"><span class="bg-purple-100 w-8 h-8 rounded-full flex items-center justify-center mr-2">2</span> 신규 히어로 상품 런칭 (돌문어)</h3>
+                <p class="text-sm text-gray-600 mb-4">가격 경쟁력이 확보된다면 굴을 대체할 강력한 메인 상품이 될 수 있습니다. 런칭 시 '산지 직송'의 생동감을 적극 어필합니다.</p>
+                <div class="bg-purple-50 p-4 rounded-lg text-sm border border-purple-100 mb-3">
+                    <strong class="text-purple-800 block mb-1">💡 당사 콘텐츠팀 지원:</strong>
+                    통영 현장 조업 릴스/쇼츠 제작. "방금 건져올린 돌문어의 힘"을 시각적으로 보여주는 15초 영상 제작 후 스토어 메인 및 SNS 스폰서드 광고 집행.
+                </div>
+                <ul class="space-y-2 text-sm text-gray-700">
+                    <li class="flex items-start"><i class="fas fa-angle-right text-purple-500 mt-1 mr-2"></i> <strong>사전 티저 :</strong> 스토어 알림받기 고객 대상으로 '통영 자연산 돌문어 입고 예정' 혜택 쿠폰 선발송.</li>
+                    <li class="flex items-start"><i class="fas fa-angle-right text-purple-500 mt-1 mr-2"></i> <strong>소싱 협의 팁 :</strong> 초기 물량은 이윤을 최소화하더라도 리뷰 100개 확보를 목표로 특가 오픈.</li>
+                </ul>
+            </div>
+
+            <!-- Strategy 3 -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover relative overflow-hidden">
+                <h3 class="text-lg font-bold mb-3 flex items-center text-teal-700"><span class="bg-teal-100 w-8 h-8 rounded-full flex items-center justify-center mr-2">3</span> 냉동/간편식/장류 판촉 아이디어</h3>
+                <p class="text-sm text-gray-600 mb-4">현재 재고 이슈로 품절이나, 비수기 방어를 위한 효자 상품군입니다. '어떻게 잘 팔 것인가?'에 대한 기획이 중요합니다.</p>
+                <ul class="space-y-3 text-sm text-gray-700">
+                    <li class="flex flex-col"><span class="font-bold flex items-center"><i class="fas fa-fire text-red-500 mr-1"></i> 게장류 (간장/양념/순살)</span>
+                        <span class="text-gray-500 mt-1 ml-4 border-l-2 border-gray-200 pl-2">당사 촬영팀의 역량 집중. 흰 쌀밥 위에 순살 게장을 짜내는 극강의 <strong>'밥도둑 먹방 숏폼'</strong>을 상세페이지와 썸네일에 적용하며, 1인 가구 타겟팅 소포장을 강조합니다.</span>
+                    </li>
+                    <li class="flex flex-col"><span class="font-bold flex items-center"><i class="fas fa-campground text-green-600 mr-1"></i> 간편국 & 건어물</span>
+                        <span class="text-gray-500 mt-1 ml-4 border-l-2 border-gray-200 pl-2"><strong>'주말 캠핑/차박 밀키트 세트'</strong> 기획전. 장어/가리비 구매 시 옵션으로 쉽게 담을 수 있도록 '추가상품'에 매력적으로 배치. 건어물은 '맥주 도둑 야식 세트'로 네이밍 변경.</span>
+                    </li>
+                    <li class="flex flex-col"><span class="font-bold flex items-center"><i class="fas fa-box text-blue-500 mr-1"></i> 유통기한/재고 관리 팁</span>
+                        <span class="text-gray-500 mt-1 ml-4 border-l-2 border-gray-200 pl-2">대량 매입보다 다품종 소량 회전 전략. '매주 수요일 한정수량 입고' 타이틀을 달아 희소성 마케팅으로 활용.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Strategy 4 -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover relative overflow-hidden">
+                <h3 class="text-lg font-bold mb-3 flex items-center text-green-700"><span class="bg-green-100 w-8 h-8 rounded-full flex items-center justify-center mr-2">4</span> N도착보장 200% 활용 홍보전</h3>
+                <p class="text-sm text-gray-600 mb-4">네이버 멤버십 회원의 무료배송 혜택은 구매 허들을 낮추는 가장 강력한 무기입니다.</p>
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-sm text-gray-800 mb-2">실행 플랜</h4>
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                        <li><strong>스토어 대문 개편:</strong> 더큐알 웹팀 활용, 스토어 메인 배너를 <span class="text-green-600 font-bold">"일공푸드 전 상품 N도착보장! 멤버십 무료배송 혜택"</span>으로 전면 교체.</li>
+                        <li><strong>단가 낮은 상품 엮기:</strong> 건어물, 장류, 순살게장 등 배송비가 아까워 구매를 망설이는 단품 위주로 N도착보장 태그 집중 홍보.</li>
+                        <li><strong>검색광고 카피:</strong> 검색광고(SA) 소재 문구에 반드시 "[도착보장/무료배송]" 키워드 삽입하여 클릭률(CTR) 상승 도모.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: AI Special Ideas -->
+        <div class="mt-12 mb-8">
+            <h2 class="text-2xl font-bold flex items-center text-gray-900 border-b-2 border-blue-500 pb-2 inline-block">
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>핵심 제안: 일공푸드만의 '초격차' 스케일업 방안
+            </h2>
+            <p class="text-gray-600 mt-2 text-sm">일공푸드의 운영 계획에 <strong class="text-blue-600">당사(더큐알)의 전문 인프라(제작/마케팅/웹)를 결합한 추가 매출 극대화 전략</strong>입니다.</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Idea 1: 네이버 브랜드 커넥트 (New) -->
+            <div class="bg-white rounded-2xl p-0 shadow-md border border-gray-100 overflow-hidden flex flex-col md:flex-row">
+                <div class="bg-indigo-600 md:w-1/3 p-6 flex flex-col justify-center text-white">
+                    <i class="fas fa-users text-4xl mb-3 text-indigo-300"></i>
+                    <h3 class="text-xl font-bold mb-2">네이버 브랜드 커넥트 활용</h3>
+                    <p class="text-indigo-100 text-sm">인플루언서 제휴를 통한 유입/판매 극대화 전략</p>
+                </div>
+                <div class="p-6 md:w-2/3 flex flex-col justify-center">
+                    <h4 class="font-bold text-gray-800 mb-2">"외부 인플루언서의 파급력을 당사의 고퀄리티 콘텐츠로 통제합니다."</h4>
+                    <p class="text-gray-600 text-sm mb-3">
+                        스마트스토어 자체 트래픽의 한계를 넘어, 네이버 브랜드 커넥트를 통해 외부 파트너(블로거, 인스타그래머)와 전략적 제휴를 맺습니다.
+                    </p>
+                    <ul class="text-sm text-gray-600 space-y-2 mb-3 list-disc list-inside">
+                        <li><strong>공동구매 (판매 쉐어):</strong> 충성도 높은 팔로워를 보유한 메가/마이크로 인플루언서와 홍가리비, 장어 등의 비수기 주력 상품 판매 수익을 쉐어하여 단기간 폭발적인 매출 확보.</li>
+                        <li><strong>체험단 제휴 마케팅:</strong> 신규 오픈 상품(돌문어) 및 판매 부진 상품(간편국, 냉동류)의 검색 상위 노출과 트래픽 유입을 위해 체험단을 대량 배포하여 양질의 리뷰 콘텐츠 누적.</li>
+                    </ul>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded text-sm">
+                        <strong class="text-indigo-800">🔥 당사 시너지:</strong> 마케팅 담당자 1인이 브랜드 커넥트 캠페인을 전담 세팅합니다. 또한, 콘텐츠팀(3명)이 인플루언서들이 리뷰 작성 시 활용할 수 있는 <strong>'일공푸드 고화질 사진/숏폼 소스팩'</strong>을 미리 제공하여, 타 업체보다 훨씬 통일성 있고 먹음직스러운 고퀄리티 리뷰가 생산되도록 유도합니다.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Idea 2: 마이크로 타겟팅 숏폼 (Kept) -->
+            <div class="bg-white rounded-2xl p-0 shadow-md border border-gray-100 overflow-hidden flex flex-col md:flex-row">
+                <div class="bg-emerald-600 md:w-1/3 p-6 flex flex-col justify-center text-white">
+                    <i class="fas fa-mobile-alt text-4xl mb-3 text-emerald-300"></i>
+                    <h3 class="text-xl font-bold mb-2">건어물 & 장류 '마이크로 타겟팅' 숏폼</h3>
+                    <p class="text-emerald-100 text-sm">비수기 상시 캐시카우를 위한 SNS 집중 공략</p>
+                </div>
+                <div class="p-6 md:w-2/3 flex flex-col justify-center">
+                    <h4 class="font-bold text-gray-800 mb-2">"건어물과 게장을 '밥반찬'이 아닌 '라이프스타일'로 브랜딩합니다."</h4>
+                    <p class="text-gray-600 text-sm mb-3">
+                        유통기한 관리가 용이한 건어물과 냉동 장류는 비수기 매출을 든든하게 받쳐줍니다. 타겟을 세분화하여(마이크로 타겟팅) 상황에 맞는 숏폼을 적극 양산합니다.
+                    </p>
+                    <ul class="text-sm text-gray-600 space-y-2 mb-3 list-disc list-inside">
+                        <li><strong>건어물:</strong> "금요일 밤 넷플릭스 필수템, 버터구이 오징어입 3분 완성"</li>
+                        <li><strong>순살게장:</strong> "자취생 밥도둑, 전자레인지 햇반에 쓱싹 비비면 끝"</li>
+                    </ul>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 rounded text-sm">
+                        <strong class="text-emerald-800">📈 당사 시너지:</strong> 마케팅팀(1명)과 콘텐츠팀(3명)이 협력해 일주일에 3개의 타겟팅 숏폼을 인스타그램 릴스와 유튜브 쇼츠에 뿌리고, 반응이 터지는 소재에 소액 광고를 태워 스마트스토어 트래픽을 유도합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+            &copy; 2026 (주)더큐알 & 일공푸드. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>
