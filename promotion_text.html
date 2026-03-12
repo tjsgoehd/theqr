@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기호 2번 김태종 - 문자 홍보 시뮬레이터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .phone-frame {
+            width: 320px;
+            height: 620px;
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 12px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 4px solid #333;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 35px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .msg-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 15px;
+            background: #f9f9fb;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bubble {
+            max-width: 85%;
+            padding: 12px 14px;
+            border-radius: 18px;
+            font-size: 13px;
+            line-height: 1.6;
+            position: relative;
+            word-break: break-all;
+        }
+
+        .bubble-received {
+            background: #e9e9eb;
+            color: black;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .msg-footer {
+            height: 50px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 10px;
+        }
+
+        .input-mock {
+            flex: 1;
+            height: 30px;
+            background: #f3f4f6;
+            border-radius: 15px;
+            padding-left: 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            color: #9ca3af;
+        }
+
+        .highlight {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .link {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        /* 탭 스타일 */
+        .tab-btn {
+            padding: 10px 20px;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            color: #9ca3af;
+        }
+        .tab-btn.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        /* 컨트롤러 스타일 */
+        .msg-list-item {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .msg-list-item:hover {
+            background-color: #ebf5ff;
+        }
+        .msg-list-item.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .byte-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        .active .byte-tag {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-start justify-center">
+        
+        <!-- 왼쪽: 스마트폰 미리보기 -->
+        <div class="sticky top-8">
+            <h2 class="text-xl font-bold mb-4 text-center text-gray-800">모바일 미리보기</h2>
+            <div class="phone-frame">
+                <div class="phone-screen">
+                    <div class="status-bar">
+                        <span>14:02</span>
+                        <div class="flex gap-1">
+                            <span>LTE</span>
+                            <span>📶</span>
+                            <span>🔋</span>
+                        </div>
+                    </div>
+                    
+                    <div class="msg-header">
+                        <div class="avatar text-sm">2번</div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-sm">기호 2번 김태종</span>
+                            <span class="text-[10px] text-green-500">대화 가능</span>
+                        </div>
+                    </div>
+
+                    <div id="chatArea" class="chat-area">
+                        <!-- JS에서 내용 주입 -->
+                    </div>
+
+                    <div class="msg-footer">
+                        <div class="w-6 h-6 rounded-full bg-gray-200"></div>
+                        <div class="input-mock text-[11px]">메시지를 입력하세요...</div>
+                        <div class="text-blue-500 font-bold text-xs">보내기</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오른쪽: 메시지 리스트 선택기 -->
+        <div class="flex-1 w-full">
+            <div class="flex border-bottom mb-6 border-b border-gray-200">
+                <button onclick="switchTab('LMS')" id="tabLMS" class="tab-btn active">장문 (LMS)</button>
+                <button onclick="switchTab('SMS')" id="tabSMS" class="tab-btn">단문 (SMS)</button>
+            </div>
+
+            <h2 id="listTitle" class="text-xl font-bold mb-2 text-gray-800">장문 홍보 문구 (최종 5선)</h2>
+            <p id="listDesc" class="text-sm text-gray-600 mb-6">확정된 장문 메시지를 클릭하여 미리보기를 확인하세요.</p>
+            
+            <div id="messageSelector" class="grid gap-3">
+                <!-- JS에서 버튼 생성 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'LMS';
+
+        const lmsMessages = [
+            {
+                id: 1,
+                title: "01. 해결사 컨셉",
+                content: "경남에 <span class='highlight'>지금 꼭 필요한 사람!</span>\n도의원 후보 <span class='highlight'>기호 2번 김태종</span>입니다.\n\n말보다 결과로 증명하겠습니다.\n경남의 해묵은 과제,\n김태종이 확실히 해결하겠습니다.\n\n▶ <span class='link'>www.김태종.com</span>\n\n무료수신거부: 080-123-4567"
+            },
+            {
+                id: 2,
+                title: "02. 변화/혁신 컨셉",
+                content: "[기호 2번 김태종]\n경남의 기분 좋은 변화,\n지금 바로 시작합니다!\n\n행동으로 보여줄 진짜 일꾼,\n도의원은 역시 김태종입니다.\n6월 3일, 변화에 투표하십시오.\n\n▶ <span class='link'>www.김태종.com</span>"
+            },
+            {
+                id: 3,
+                title: "03. 강력 임팩트 컨셉",
+                content: "더 이상 미룰 수 없습니다.\n지금 경남에 <span class='highlight'>가장 필요한 사람!</span>\n\n6월 3일(수), 도의원은\n묻지도 따지지도 말고 <span class='highlight'>2번 김태종!</span>\n확실한 성과로 보답하겠습니다.\n\n▶ <span class='link'>www.김태종.com</span>"
+            },
+            {
+                id: 4,
+                title: "04. 짧고 굵은 메시지",
+                content: "[6월 3일 투표 안내]\n\n경남 도의원은 역시 <span class='highlight'>김태종!</span>\n경남이 기다려온 진짜 일꾼,\n기호 2번 김태종을 선택해 주세요.\n\n지금 경남엔 김태종이 필요합니다.\n▶ <span class='link'>www.김태종.com</span>"
+            },
+            {
+                id: 5,
+                title: "05. 미래 비전 컨셉",
+                content: "우리 아이들의 미래,\n경남의 밝은 내일을 위해!\n\n지금 꼭 필요한 교육/경제 일꾼\n기호 2번 김태종이 앞장서겠습니다.\n희망찬 경남, 함께 만듭시다.\n\n▶ <span class='link'>www.김태종.com</span>"
+            }
+        ];
+
+        const smsMessages = [
+            { id: 1, title: "01. 실천 일꾼", content: "[2번 김태종] 경남에 꼭 필요한 일꾼! 6/3 도의원 투표는 김태종! <span class='link'>www.김태종.com</span>", byte: 76 },
+            { id: 2, title: "02. 변화 시작", content: "[기호2번 김태종] 경남의 변화, 지금 시작! 6/3 꼭 투표하세요! <span class='link'>www.김태종.com</span>", byte: 84 },
+            { id: 3, title: "03. 준비된 인재", content: "[김태종] 경남 도의원 후보 2번. 실력 있는 일꾼이 뜁니다! <span class='link'>www.김태종.com</span>", byte: 78 },
+            { id: 4, title: "04. 투표 독려", content: "[2번 김태종] 도의원은 역시 김태종! 경남을 위해 투표하세요. <span class='link'>www.김태종.com</span>", byte: 80 },
+            { id: 5, title: "05. 우리 아이들", content: "[2번 김태종] 우리 아이들의 미래! 경남의 발전! 기호 2번 김태종 <span class='link'>www.김태종.com</span>", byte: 86 },
+            { id: 6, title: "06. 행동 증명", content: "[도의원 김태종] 행동으로 증명하겠습니다. 기호 2번 김태종 선택! <span class='link'>www.김태종.com</span>", byte: 82 },
+            { id: 7, title: "07. 지금 필요", content: "[6/3 투표] 도의원 후보 2번 김태종. 경남에 꼭 필요한 사람! <span class='link'>www.김태종.com</span>", byte: 84 },
+            { id: 8, title: "08. 자부심 회복", content: "[김태종] 경남의 자부심을 되찾겠습니다! 기호 2번 김태종 투표! <span class='link'>www.김태종.com</span>", byte: 82 }
+        ];
+
+        const chatArea = document.getElementById('chatArea');
+        const messageSelector = document.getElementById('messageSelector');
+        const listTitle = document.getElementById('listTitle');
+        const listDesc = document.getElementById('listDesc');
+
+        function updatePreview(id) {
+            const data = currentTab === 'LMS' ? lmsMessages : smsMessages;
+            const msg = data.find(m => m.id === id);
+            
+            chatArea.innerHTML = `
+                <div class="bubble bubble-received whitespace-pre-line">
+                    ${msg.content}
+                </div>
+                <div class="text-[10px] text-gray-400 ml-1">오후 2:02</div>
+            `;
+
+            document.querySelectorAll('.msg-list-item').forEach(btn => {
+                btn.classList.remove('active');
+                if(parseInt(btn.dataset.id) === id) btn.classList.add('active');
+            });
+        }
+
+        function renderMessageList() {
+            messageSelector.innerHTML = '';
+            const data = currentTab === 'LMS' ? lmsMessages : smsMessages;
+            
+            data.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'msg-list-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm flex justify-between items-center';
+                div.dataset.id = msg.id;
+                
+                const byteDisplay = currentTab === 'SMS' ? `<span class="byte-tag">${msg.byte}Byte</span>` : '';
+                
+                div.innerHTML = `
+                    <div class="flex flex-col gap-1">
+                        <span class="font-medium text-sm md:text-base">${msg.title}</span>
+                        ${byteDisplay}
+                    </div>
+                    <span class="text-xs text-gray-400">보기 ></span>
+                `;
+                div.onclick = () => updatePreview(msg.id);
+                messageSelector.appendChild(div);
+            });
+
+            // 리스트 렌더링 후 첫 번째 메시지 미리보기
+            updatePreview(1);
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // 탭 스타일 전환
+            document.getElementById('tabLMS').classList.toggle('active', tab === 'LMS');
+            document.getElementById('tabSMS').classList.toggle('active', tab === 'SMS');
+            
+            // 타이틀/설명 전환
+            if(tab === 'LMS') {
+                listTitle.innerText = "장문 홍보 문구 (최종 5선)";
+                listDesc.innerText = "확정된 장문 메시지를 클릭하여 미리보기를 확인하세요.";
+            } else {
+                listTitle.innerText = "단문 홍보 문구 (90Byte 이하)";
+                listDesc.innerText = "단문(SMS) 발송용 8가지 문구입니다. 핵심 내용을 체크하세요.";
+            }
+
+            renderMessageList();
+        }
+
+        // 초기 실행
+        renderMessageList();
+    </script>
+</body>
+</html>
