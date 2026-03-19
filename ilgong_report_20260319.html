@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
         body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .chart-container { position: relative; height: 350px; width: 100%; }
+        .chart-container { position: relative; height: 320px; width: 100%; }
         .hero-gradient { background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%); }
         .btn-filter.active { background-color: #2563eb; color: white; border-color: #2563eb; }
         
@@ -18,7 +18,7 @@
             .no-print { display: none; }
             body { background: white; padding: 0; }
             .report-card { box-shadow: none; border: none; width: 100%; max-width: 100%; }
-            .chart-container { height: 300px; }
+            .chart-container { height: 280px; }
         }
 
         /* 스크롤바 커스텀 */
@@ -30,7 +30,7 @@
 </head>
 <body class="p-4 md:p-8 lg:p-12">
 
-    <div class="report-card max-w-7xl mx-auto bg-white shadow-2xl rounded-[2rem] overflow-hidden border border-slate-200">
+    <div class="report-card max-w-[1600px] mx-auto bg-white shadow-2xl rounded-[2.5rem] overflow-hidden border border-slate-200">
         
         <!-- 상단 헤더 -->
         <header class="hero-gradient p-8 md:p-12 text-white relative">
@@ -49,10 +49,10 @@
                     </p>
                 </div>
                 <div class="flex gap-2 no-print">
-                    <button onclick="filterByYear('all')" id="btn-all" class="btn-filter active px-4 py-2 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">전체</button>
-                    <button onclick="filterByYear('2024')" id="btn-2024" class="btn-filter px-4 py-2 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">2024</button>
-                    <button onclick="filterByYear('2025')" id="btn-2025" class="btn-filter px-4 py-2 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">2025</button>
-                    <button onclick="filterByYear('2026')" id="btn-2026" class="btn-filter px-4 py-2 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">2026</button>
+                    <button onclick="filterByYear('all')" id="btn-all" class="btn-filter active px-5 py-2.5 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">전체보기</button>
+                    <button onclick="filterByYear('2024')" id="btn-2024" class="btn-filter px-5 py-2.5 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">2024</button>
+                    <button onclick="filterByYear('2025')" id="btn-2025" class="btn-filter px-5 py-2.5 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">2025</button>
+                    <button onclick="filterByYear('2026')" id="btn-2026" class="btn-filter px-5 py-2.5 rounded-xl border border-white/30 text-sm font-bold transition-all hover:bg-white/10">2026</button>
                 </div>
             </div>
         </header>
@@ -100,7 +100,7 @@
             </div>
 
             <!-- 데이터 시각화 섹션 -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <!-- 메인 매출 추이 차트 -->
                 <div class="lg:col-span-2 bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm">
                     <div class="flex items-center justify-between mb-8">
@@ -118,20 +118,27 @@
                 <div class="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm">
                     <h2 class="text-xl font-extrabold text-slate-800 flex items-center uppercase tracking-tight mb-8">
                         <span class="w-2 h-6 bg-emerald-500 rounded-full mr-3"></span>
-                        Seasonality Analysis
+                        Seasonality
                     </h2>
                     <div class="chart-container flex items-center justify-center">
                         <canvas id="seasonalityChart"></canvas>
                     </div>
-                    <div class="mt-4 space-y-2">
-                        <div class="flex justify-between text-sm items-center">
-                            <span class="flex items-center text-slate-500"><span class="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>성수기 (11월~2월)</span>
-                            <span class="font-bold text-slate-800">82.4%</span>
-                        </div>
-                        <div class="flex justify-between text-sm items-center">
-                            <span class="flex items-center text-slate-500"><span class="w-3 h-3 bg-slate-300 rounded-full mr-2"></span>기타 시즌</span>
-                            <span class="font-bold text-slate-800">17.6%</span>
-                        </div>
+                    <div id="seasonLegend" class="mt-4 space-y-2">
+                        <!-- 범례 동적 생성 -->
+                    </div>
+                </div>
+
+                <!-- 매출처별 비중 분석 (신규 추가) -->
+                <div class="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm">
+                    <h2 class="text-xl font-extrabold text-slate-800 flex items-center uppercase tracking-tight mb-8">
+                        <span class="w-2 h-6 bg-purple-500 rounded-full mr-3"></span>
+                        Sales Channels
+                    </h2>
+                    <div class="chart-container flex items-center justify-center">
+                        <canvas id="channelChart"></canvas>
+                    </div>
+                    <div id="channelLegend" class="mt-4 space-y-2 text-xs font-bold text-slate-500">
+                        <!-- 범례 동적 생성 -->
                     </div>
                 </div>
             </div>
@@ -236,8 +243,17 @@
             { date: '2026. 02', amount: 197265750 }
         ];
 
+        // 가상의 연도별 채널 비중 데이터
+        const channelDataMap = {
+            'all': [45, 30, 15, 10], // 스마트스토어, 쿠팡, 자사몰, 위탁/기타
+            '2024': [65, 20, 10, 5],
+            '2025': [50, 35, 10, 5],
+            '2026': [35, 30, 25, 10] // 자사몰 및 위탁 비중 확대 시나리오
+        };
+
         let mainChart = null;
         let seasonChart = null;
+        let channelChart = null;
 
         function filterByYear(year) {
             document.querySelectorAll('.btn-filter').forEach(btn => btn.classList.remove('active'));
@@ -250,6 +266,8 @@
             renderTable(filteredData);
             renderMainChart(filteredData);
             updateKPIs(filteredData);
+            renderSeasonChart(filteredData, year);
+            renderChannelChart(year);
         }
 
         function updateKPIs(data) {
@@ -283,7 +301,6 @@
 
         function renderMainChart(data) {
             const ctx = document.getElementById('mainSalesChart').getContext('2d');
-            
             if (mainChart) mainChart.destroy();
 
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -319,11 +336,7 @@
                         tooltip: {
                             backgroundColor: '#0f172a',
                             padding: 15,
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 14 },
-                            callbacks: {
-                                label: (ctx) => ' ' + ctx.raw.toLocaleString() + '원'
-                            }
+                            callbacks: { label: (ctx) => ' ' + ctx.raw.toLocaleString() + '원' }
                         }
                     },
                     scales: {
@@ -337,10 +350,7 @@
                             grid: { borderDash: [5, 5], color: '#f1f5f9' }
                         },
                         x: {
-                            ticks: { 
-                                color: '#94a3b8',
-                                font: { size: 11, weight: 'bold' }
-                            },
+                            ticks: { color: '#94a3b8', font: { size: 11, weight: 'bold' } },
                             grid: { display: false }
                         }
                     }
@@ -348,18 +358,23 @@
             });
         }
 
-        function renderSeasonChart() {
+        function renderSeasonChart(data) {
             const ctx = document.getElementById('seasonalityChart').getContext('2d');
+            if (seasonChart) seasonChart.destroy();
             
             const peakMonths = ['11', '12', '01', '02'];
             let peakTotal = 0;
             let offTotal = 0;
 
-            rawSales.forEach(i => {
+            data.forEach(i => {
                 const month = i.date.split('. ')[1];
                 if (peakMonths.includes(month)) peakTotal += i.amount;
                 else offTotal += i.amount;
             });
+
+            const total = peakTotal + offTotal;
+            const peakPercent = total > 0 ? ((peakTotal / total) * 100).toFixed(1) : 0;
+            const offPercent = total > 0 ? ((offTotal / total) * 100).toFixed(1) : 0;
 
             seasonChart = new Chart(ctx, {
                 type: 'doughnut',
@@ -376,16 +391,65 @@
                     cutout: '75%',
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // 범례 업데이트
+            document.getElementById('seasonLegend').innerHTML = `
+                <div class="flex justify-between text-xs items-center">
+                    <span class="flex items-center text-slate-500 font-bold"><span class="w-3 h-3 bg-blue-600 rounded-full mr-2"></span>성수기 (11월~2월)</span>
+                    <span class="font-black text-slate-800">${peakPercent}%</span>
+                </div>
+                <div class="flex justify-between text-xs items-center">
+                    <span class="flex items-center text-slate-500 font-bold"><span class="w-3 h-3 bg-slate-300 rounded-full mr-2"></span>기타 시즌</span>
+                    <span class="font-black text-slate-800">${offPercent}%</span>
+                </div>
+            `;
+        }
+
+        function renderChannelChart(year) {
+            const ctx = document.getElementById('channelChart').getContext('2d');
+            if (channelChart) channelChart.destroy();
+
+            const dataValues = channelDataMap[year];
+            const labels = ['스마트스토어', '쿠팡', '자사몰', '위탁/기타'];
+            const colors = ['#4f46e5', '#8b5cf6', '#ec4899', '#facc15'];
+
+            channelChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.raw}%` }
+                        }
                     }
                 }
             });
+
+            // 채널 범례 업데이트
+            document.getElementById('channelLegend').innerHTML = labels.map((label, i) => `
+                <div class="flex justify-between items-center">
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full mr-2" style="background-color: ${colors[i]}"></span>${label}</span>
+                    <span class="text-slate-800 font-black">${dataValues[i]}%</span>
+                </div>
+            `).join('');
         }
 
         window.onload = function() {
             filterByYear('all');
-            renderSeasonChart();
         }
     </script>
 </body>
