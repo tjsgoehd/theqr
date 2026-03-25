@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일공푸드 매출 통합 대시보드</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .chart-container { position: relative; height: 320px; width: 100%; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .brand-gradient { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 100; flex-direction: column; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="loading" class="loading-overlay">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mb-4"></div>
+        <p class="font-bold text-slate-700">구글 시트에서 데이터를 실시간으로 동기화 중입니다...</p>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="brand-gradient text-white py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center shadow-lg sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="bg-white p-1.5 rounded-lg shadow-inner">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            </div>
+            <h1 class="text-xl font-bold tracking-tight">일공푸드 <span class="font-normal opacity-80 text-sm ml-1">Sales Intelligence</span></h1>
+        </div>
+        <div class="mt-4 md:mt-0 flex items-center gap-4">
+            <div id="data-status" class="bg-blue-800/40 px-3 py-1.5 rounded-full border border-blue-400/30 text-xs font-semibold">
+                연결 대기 중
+            </div>
+            <button onclick="fetchLiveData()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-white/20">
+                실시간 새로고침
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-[1600px] mx-auto p-4 md:p-8 space-y-8">
+        
+        <!-- Live Connection Status Card -->
+        <section class="glass-card p-6 rounded-2xl shadow-sm border-l-4 border-emerald-500">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800">구글 시트 연동 활성화됨</h4>
+                    <p class="text-xs text-slate-500 mt-1">시트 데이터가 변경될 때마다 위 '실시간 새로고침' 버튼을 누르거나 페이지를 새로고침하면 반영됩니다.</p>
+                </div>
+                <div class="w-full md:w-2/3 flex gap-2">
+                    <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vS14RJTa_SjkoaYIc0iN8kEmVOtZg9mwy1Hb_iUae3lcmAsDNxj93toHfpxJWKWNQNJT6oYC3qo_DOh/pubhtml" 
+                           class="flex-1 bg-slate-50 border-slate-200 rounded-xl px-4 py-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none" readonly>
+                    <button onclick="copyUrl()" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all">URL 복사</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Filters -->
+        <section class="glass-card p-6 rounded-2xl shadow-sm flex flex-col md:flex-row items-end gap-6">
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">조회 기간 (시작)</label>
+                    <input type="month" id="startMonth" class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 transition-all outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">조회 기간 (종료)</label>
+                    <input type="month" id="endMonth" class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 transition-all outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">비교 기준</label>
+                    <select id="comparisonType" class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 transition-all outline-none">
+                        <option value="YoY">전년 동기 대비 (YoY)</option>
+                        <option value="MoM">직전 기간 대비 (MoM)</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="updateDashboard()" class="w-full md:w-auto bg-slate-900 text-white font-bold py-2.5 px-8 rounded-xl hover:bg-slate-800 transition-all shadow-md active:scale-95">
+                분석 적용
+            </button>
+        </section>
+
+        <!-- KPI Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card p-6 rounded-2xl hover:shadow-md transition-all">
+                <p class="text-sm font-semibold text-slate-500">기간 총 매출액</p>
+                <div class="mt-4 flex items-baseline gap-1">
+                    <h3 id="total-revenue" class="text-3xl font-bold tracking-tight text-slate-900">0</h3>
+                    <span class="text-lg font-medium text-slate-500">원</span>
+                </div>
+                <p id="yoy-comparison" class="text-xs mt-2 font-bold"></p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl hover:shadow-md transition-all">
+                <p class="text-sm font-semibold text-slate-500">최고 성과 채널</p>
+                <div class="mt-4">
+                    <h3 id="best-channel" class="text-3xl font-bold tracking-tight text-blue-600">-</h3>
+                    <p id="best-channel-share" class="text-xs mt-2 text-slate-400 font-medium">전체 비중 -%</p>
+                </div>
+            </div>
+            <div class="glass-card p-6 rounded-2xl hover:shadow-md transition-all">
+                <p class="text-sm font-semibold text-slate-500">평균 월 매출</p>
+                <div class="mt-4 flex items-baseline gap-1">
+                    <h3 id="avg-monthly" class="text-3xl font-bold tracking-tight text-slate-900">0</h3>
+                    <span class="text-lg font-medium text-slate-500">원</span>
+                </div>
+                <p id="trend-label" class="text-xs mt-2 text-emerald-600 font-bold tracking-tight italic">연동 대기</p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl hover:shadow-md transition-all">
+                <p class="text-sm font-semibold text-slate-500">조회 데이터 범위</p>
+                <div class="mt-4">
+                    <h3 id="month-count" class="text-3xl font-bold tracking-tight text-slate-900">0</h3>
+                    <p class="text-xs mt-2 text-indigo-600 font-bold uppercase tracking-widest">결산 완료 개월 수</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Area -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 glass-card p-8 rounded-2xl shadow-sm">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-xl font-bold text-slate-800">월별 매출 트렌드</h3>
+                    <div class="flex gap-4">
+                        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-blue-600 rounded-full"></span><span class="text-[10px] font-bold text-slate-500">현재</span></div>
+                        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-slate-300 rounded-full"></span><span class="text-[10px] font-bold text-slate-500">비교 대상</span></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+            <div class="glass-card p-8 rounded-2xl shadow-sm">
+                <h3 class="text-xl font-bold text-slate-800 mb-8">채널 점유율</h3>
+                <div class="chart-container">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Performance Table -->
+        <section class="glass-card rounded-2xl shadow-sm overflow-hidden">
+            <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800">판매처별 실적 분석</h3>
+                    <p class="text-xs text-slate-400 mt-1">정산 내역 기준 누적 성과 요약</p>
+                </div>
+                <button onclick="exportToCSV()" class="bg-emerald-600 text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-emerald-700 transition-all shadow-sm">엑셀 다운로드</button>
+            </div>
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50/50">
+                        <tr>
+                            <th class="px-8 py-5 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b">판매처</th>
+                            <th class="px-8 py-5 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b text-right">매출 합계</th>
+                            <th class="px-8 py-5 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b text-right">점유율</th>
+                            <th class="px-8 py-5 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b text-right">성장률</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Monthly Breakdown Table -->
+        <section class="glass-card rounded-2xl shadow-sm overflow-hidden">
+            <div class="px-8 py-6 border-b border-slate-100 bg-white">
+                <h3 class="text-xl font-bold text-slate-800">월별 판매처 상세 데이터</h3>
+                <p class="text-xs text-slate-400 mt-1">구글 시트 귀속월별 정산금 상세 내역</p>
+            </div>
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left border-collapse min-w-[1200px]">
+                    <thead id="monthlyTableHeader" class="bg-slate-50/50"></thead>
+                    <tbody id="monthlyTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Toast -->
+        <div id="toast" class="fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl translate-y-24 opacity-0 transition-all duration-500 flex items-center gap-3 z-[60]">
+            <span id="toast-message" class="text-sm font-bold"></span>
+        </div>
+    </main>
+
+    <script>
+        // --- CONSTANTS & CONFIG ---
+        const CHANNELS = ["자사몰", "스마트스토어", "알리", "쿠팡", "톡스토어", "11번가", "토스", "AG(옥션/지마켓)", "전화주문", "벨라하우스"];
+        const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#6366f1', '#64748b'];
+        
+        let columnMap = {
+            "귀속월": 8,
+            "전화주문": 9,
+            "벨라하우스": 10,
+            "자사몰": 13,
+            "스마트스토어": 17,
+            "알리": 21,
+            "쿠팡": 25,
+            "톡스토어": 28,
+            "11번가": 32,
+            "토스": 36,
+            "AG(옥션/지마켓)": 40
+        };
+
+        let rawData = [];
+        let mainChartInstance = null;
+        let pieChartInstance = null;
+
+        // --- CORE LOGIC ---
+        async function fetchLiveData() {
+            const overlay = document.getElementById('loading');
+            overlay.style.display = 'flex';
+            
+            let url = document.getElementById('sheetUrl').value.trim();
+            if (url.includes('pubhtml')) {
+                url = url.replace('pubhtml', 'pub?output=csv');
+            } else if (!url.includes('output=csv')) {
+                url = url + (url.includes('?') ? '&' : '?') + 'output=csv';
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("시트 데이터를 가져올 수 없습니다.");
+                
+                const csvText = await response.text();
+                const data = parseSettlementCSV(csvText);
+                
+                if (data.length === 0) throw new Error("유효한 정산 데이터를 찾을 수 없습니다. 시트 구조나 '귀속월' 컬럼을 확인하세요.");
+                
+                rawData = data;
+                updateDashboardInfo();
+                
+                // 초기 날짜 범위 설정 (전체 데이터 범위)
+                if (!document.getElementById('startMonth').value) {
+                    document.getElementById('startMonth').value = data[0].month;
+                    document.getElementById('endMonth').value = data[data.length-1].month;
+                }
+                
+                updateDashboard();
+                showToast("데이터 동기화 완료!");
+            } catch (err) {
+                console.error("Fetch Error:", err);
+                showToast(`오류: ${err.message}`);
+            } finally {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function parseSettlementCSV(csvText) {
+            const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== "");
+            if (lines.length === 0) return [];
+
+            const results = [];
+            let headerRowIndex = -1;
+
+            // 1. 헤더 행 동적 찾기
+            for (let i = 0; i < Math.min(40, lines.length); i++) {
+                const row = parseCSVRow(lines[i]);
+                const matchCount = CHANNELS.filter(ch => row.some(cell => cell.includes(ch))).length;
+                if (matchCount >= 2 || row.some(cell => cell.includes("귀속월"))) {
+                    headerRowIndex = i;
+                    CHANNELS.forEach(ch => {
+                        const idx = row.findIndex(cell => cell.includes(ch));
+                        if (idx !== -1) columnMap[ch] = idx;
+                    });
+                    const dateIdx = row.findIndex(cell => cell.includes("귀속월"));
+                    if (dateIdx !== -1) columnMap["귀속월"] = dateIdx;
+                    break;
+                }
+            }
+
+            // 2. 데이터 행 파싱
+            for (let i = 0; i < lines.length; i++) {
+                if (i <= headerRowIndex) continue;
+                
+                const row = parseCSVRow(lines[i]);
+                const monthRaw = row[columnMap["귀속월"]]?.trim();
+                
+                // 날짜 감지 정규식 개선: YYYY.M, YYYY.MM, YYYY-M, YYYY-MM 등 모든 숫자 기반 날짜 패턴
+                if (monthRaw) {
+                    const dateMatch = monthRaw.match(/(\d{4})[.년\s-]*(\d{1,2})/);
+                    if (dateMatch) {
+                        const year = dateMatch[1];
+                        const month = dateMatch[2].padStart(2, '0'); // '1' -> '01' 보정
+                        const cleanMonth = `${year}-${month}`;
+
+                        const entry = { month: cleanMonth };
+                        let total = 0;
+                        
+                        CHANNELS.forEach(ch => {
+                            const valStr = row[columnMap[ch]] || "0";
+                            const val = parseInt(valStr.replace(/[^0-9-]/g, '')) || 0;
+                            entry[ch] = val;
+                            total += val;
+                        });
+                        
+                        entry.total = total;
+                        if (total !== 0) { 
+                            results.push(entry);
+                        }
+                    }
+                }
+            }
+
+            // 3. 월별 데이터 병합 및 정렬
+            const merged = results.reduce((acc, cur) => {
+                const existing = acc.find(x => x.month === cur.month);
+                if (existing) {
+                    CHANNELS.forEach(ch => existing[ch] += cur[ch]);
+                    existing.total += cur.total;
+                } else {
+                    acc.push(cur);
+                }
+                return acc;
+            }, []);
+
+            return merged.sort((a, b) => a.month.localeCompare(b.month));
+        }
+
+        function parseCSVRow(text) {
+            const row = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    row.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            row.push(current.trim());
+            return row;
+        }
+
+        function updateDashboard() {
+            if (rawData.length === 0) return;
+
+            const start = document.getElementById('startMonth').value;
+            const end = document.getElementById('endMonth').value;
+            const compType = document.getElementById('comparisonType').value;
+
+            const current = rawData.filter(d => d.month >= start && d.month <= end);
+            
+            if (current.length === 0) {
+                showToast("선택한 기간에 데이터가 없습니다.");
+                // 데이터 없을 시 대시보드 리셋
+                renderKPIs([], [], compType);
+                renderCharts([], []);
+                renderTable([], []);
+                renderMonthlyTable([]);
+                return;
+            }
+
+            let compareData = [];
+            if (compType === 'YoY') {
+                const startYear = parseInt(start.split('-')[0]);
+                const startMonth = start.split('-')[1];
+                const endYear = parseInt(end.split('-')[0]);
+                const endMonth = end.split('-')[1];
+                const startLY = (startYear - 1) + '-' + startMonth;
+                const endLY = (endYear - 1) + '-' + endMonth;
+                compareData = rawData.filter(d => d.month >= startLY && d.month <= endLY);
+            } else {
+                const startDate = new Date(start + '-01');
+                const endDate = new Date(end + '-01');
+                const diffMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth()) + 1;
+                
+                const prevEndDate = new Date(startDate);
+                prevEndDate.setMonth(prevEndDate.getMonth() - 1);
+                const prevStartDate = new Date(prevEndDate);
+                prevStartDate.setMonth(prevStartDate.getMonth() - diffMonths + 1);
+                
+                const pS = prevStartDate.toISOString().substring(0, 7);
+                const pE = prevEndDate.toISOString().substring(0, 7);
+                compareData = rawData.filter(d => d.month >= pS && d.month <= pE);
+            }
+
+            renderKPIs(current, compareData, compType);
+            renderCharts(current, compareData);
+            renderTable(current, compareData);
+            renderMonthlyTable(current);
+        }
+
+        function renderKPIs(current, compareData, type) {
+            const total = current.reduce((acc, cur) => acc + cur.total, 0);
+            const totalComp = compareData.reduce((acc, cur) => acc + cur.total, 0);
+            
+            document.getElementById('total-revenue').innerText = new Intl.NumberFormat().format(total);
+            document.getElementById('month-count').innerText = current.length;
+            
+            const compEl = document.getElementById('yoy-comparison');
+            if (totalComp > 0) {
+                const diff = ((total - totalComp) / totalComp * 100).toFixed(1);
+                compEl.className = `text-xs mt-2 font-bold ${diff >= 0 ? 'text-rose-500' : 'text-blue-500'}`;
+                compEl.innerText = `${diff >= 0 ? '▲' : '▼'} ${Math.abs(diff)}% (${type} 대비)`;
+            } else {
+                compEl.className = 'text-xs mt-2 text-slate-400 font-medium';
+                compEl.innerText = "비교 데이터 부족";
+            }
+
+            const channelStats = CHANNELS.map(ch => ({
+                name: ch, val: current.reduce((acc, cur) => acc + (cur[ch] || 0), 0)
+            })).sort((a, b) => b.val - a.val);
+
+            const best = channelStats[0] || { name: '-', val: 0 };
+            document.getElementById('best-channel').innerText = best.name;
+            document.getElementById('best-channel-share').innerText = `전체 비중 ${total > 0 ? (best.val/total*100).toFixed(1) : 0}%`;
+
+            const avg = current.length > 0 ? Math.round(total / current.length) : 0;
+            document.getElementById('avg-monthly').innerText = new Intl.NumberFormat().format(avg);
+            document.getElementById('trend-label').innerText = current.length > 0 ? (totalComp > 0 ? (total > totalComp ? "성장세 유지 중" : "전기 대비 하락세") : "데이터 모니터링 중") : "조회 범위 데이터 없음";
+        }
+
+        function renderCharts(current, compareData) {
+            const ctxL = document.getElementById('mainChart').getContext('2d');
+            if (mainChartInstance) mainChartInstance.destroy();
+            
+            mainChartInstance = new Chart(ctxL, {
+                type: 'line',
+                data: {
+                    labels: current.map(d => d.month),
+                    datasets: [
+                        { 
+                            label: '현재', 
+                            data: current.map(d => d.total), 
+                            borderColor: '#2563eb', 
+                            fill: true, 
+                            backgroundColor: 'rgba(37, 99, 235, 0.05)', 
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#fff',
+                            borderWidth: 3
+                        },
+                        { 
+                            label: '비교', 
+                            data: compareData.map(d => d.total), 
+                            borderColor: '#cbd5e1', 
+                            borderDash: [5, 5], 
+                            fill: false, 
+                            tension: 0.4,
+                            pointRadius: 0 
+                        }
+                    ]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } },
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            const ctxP = document.getElementById('pieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+            const pieData = CHANNELS.map(ch => current.reduce((acc, cur) => acc + (cur[ch] || 0), 0));
+            
+            pieChartInstance = new Chart(ctxP, {
+                type: 'doughnut',
+                data: { 
+                    labels: CHANNELS, 
+                    datasets: [{ 
+                        data: pieData, 
+                        backgroundColor: COLORS, 
+                        borderWidth: 2, 
+                        borderColor: '#fff',
+                        hoverOffset: 10
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    cutout: '65%',
+                    plugins: { 
+                        legend: { 
+                            position: 'right', 
+                            labels: { 
+                                boxWidth: 8, 
+                                font: { size: 10, weight: 'bold' },
+                                padding: 15
+                            } 
+                        } 
+                    } 
+                }
+            });
+        }
+
+        function renderTable(current, compareData) {
+            const tbody = document.getElementById('salesTableBody');
+            const total = current.reduce((acc, cur) => acc + cur.total, 0);
+            tbody.innerHTML = '';
+
+            CHANNELS.map((ch, i) => {
+                const val = current.reduce((acc, cur) => acc + (cur[ch] || 0), 0);
+                const valComp = compareData.reduce((acc, cur) => acc + (cur[ch] || 0), 0);
+                const share = total > 0 ? (val / total * 100).toFixed(1) : 0;
+                const growth = valComp > 0 ? ((val - valComp) / valComp * 100).toFixed(1) : null;
+                return { ch, val, share, growth, color: COLORS[i] };
+            }).sort((a, b) => b.val - a.val).forEach(s => {
+                const row = `<tr>
+                    <td class="px-8 py-5 text-sm font-bold flex items-center gap-2 text-slate-700">
+                        <span class="w-2 h-2 rounded-full" style="background:${s.color}"></span> ${s.ch}
+                    </td>
+                    <td class="px-8 py-5 text-sm text-right font-mono">${new Intl.NumberFormat().format(s.val)}</td>
+                    <td class="px-8 py-5 text-sm text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <span class="text-xs text-slate-400">${s.share}%</span>
+                            <div class="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full rounded-full" style="width:${s.share}%; background:${s.color}"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5 text-sm text-right font-bold ${s.growth >= 0 ? 'text-rose-500' : 'text-blue-500'}">
+                        ${s.growth !== null ? (s.growth > 0 ? '+' : '') + s.growth + '%' : '-'}
+                    </td>
+                </tr>`;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        function renderMonthlyTable(current) {
+            const header = document.getElementById('monthlyTableHeader');
+            const body = document.getElementById('monthlyTableBody');
+            
+            header.innerHTML = `<tr><th class="px-6 py-4 border-b sticky left-0 bg-slate-50 z-10 text-[10px] font-bold text-slate-400 uppercase tracking-widest">귀속월</th>` + 
+                CHANNELS.map(ch => `<th class="px-6 py-4 border-b text-right text-[10px] font-bold text-slate-400 uppercase tracking-widest">${ch}</th>`).join('') +
+                `<th class="px-6 py-4 border-b text-right text-[10px] font-bold text-blue-600 uppercase tracking-widest bg-blue-50/50">합계</th></tr>`;
+
+            body.innerHTML = current.map(row => `<tr>
+                <td class="px-6 py-4 border-b font-bold text-slate-700 sticky left-0 bg-white z-10 text-sm">${row.month}</td>
+                ${CHANNELS.map(ch => `<td class="px-6 py-4 border-b text-right font-mono text-sm text-slate-500">${new Intl.NumberFormat().format(row[ch])}</td>`).join('')}
+                <td class="px-6 py-4 border-b text-right font-bold text-blue-600 bg-blue-50/20 text-sm">${new Intl.NumberFormat().format(row.total)}</td>
+            </tr>`).join('');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            t.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 3000);
+        }
+
+        function updateDashboardInfo() {
+            document.getElementById('data-status').innerText = `연동 완료 (${rawData.length}개월)`;
+        }
+
+        function copyUrl() {
+            const url = document.getElementById('sheetUrl').value;
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast("URL이 복사되었습니다.");
+        }
+
+        function exportToCSV() {
+            let csv = "\ufeff월,";
+            csv += CHANNELS.join(",") + ",합계\n";
+            rawData.forEach(r => {
+                csv += `${r.month},${CHANNELS.map(ch => r[ch]).join(",")},${r.total}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `일공푸드_매출분석_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        window.onload = fetchLiveData;
+    </script>
+</body>
+</html>
