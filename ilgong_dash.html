@@ -22,7 +22,7 @@
 
     <div id="loading" class="loading-overlay">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mb-4"></div>
-        <p class="font-bold text-slate-700">구글 시트에서 데이터를 실시간으로 동기화 중입니다...</p>
+        <p class="font-bold text-slate-700">구글 시트에서 최신 데이터를 실시간으로 가져오는 중입니다...</p>
     </div>
 
     <!-- Top Navigation -->
@@ -49,8 +49,8 @@
         <section class="glass-card p-6 rounded-2xl shadow-sm border-l-4 border-emerald-500">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex-1">
-                    <h4 class="font-bold text-slate-800">구글 시트 연동 활성화됨</h4>
-                    <p class="text-xs text-slate-500 mt-1">시트 데이터가 변경될 때마다 위 '실시간 새로고침' 버튼을 누르거나 페이지를 새로고침하면 반영됩니다.</p>
+                    <h4 class="font-bold text-slate-800">구글 시트 실시간 연동</h4>
+                    <p class="text-xs text-slate-500 mt-1">시트 수정 후 약 1~5분의 반영 시간이 소요될 수 있습니다. 데이터가 안 나올 경우 '실시간 새로고침'을 눌러주세요.</p>
                 </div>
                 <div class="w-full md:w-2/3 flex gap-2">
                     <input type="text" id="sheetUrl" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vS14RJTa_SjkoaYIc0iN8kEmVOtZg9mwy1Hb_iUae3lcmAsDNxj93toHfpxJWKWNQNJT6oYC3qo_DOh/pubhtml" 
@@ -218,15 +218,19 @@
             } else if (!url.includes('output=csv')) {
                 url = url + (url.includes('?') ? '&' : '?') + 'output=csv';
             }
+            
+            // 캐시 방지를 위해 타임스탬프 파라미터 추가
+            const timestamp = new Date().getTime();
+            const finalUrl = url + (url.includes('?') ? '&' : '?') + 'cache_bust=' + timestamp;
 
             try {
-                const response = await fetch(url);
+                const response = await fetch(finalUrl, { cache: "no-store" });
                 if (!response.ok) throw new Error("시트 데이터를 가져올 수 없습니다.");
                 
                 const csvText = await response.text();
                 const data = parseSettlementCSV(csvText);
                 
-                if (data.length === 0) throw new Error("유효한 정산 데이터를 찾을 수 없습니다. 시트 구조나 '귀속월' 컬럼을 확인하세요.");
+                if (data.length === 0) throw new Error("유효한 정산 데이터를 찾을 수 없습니다. 시트의 '귀속월' 컬럼 내용을 확인하세요.");
                 
                 rawData = data;
                 updateDashboardInfo();
@@ -238,7 +242,8 @@
                 }
                 
                 updateDashboard();
-                showToast("데이터 동기화 완료!");
+                showToast("최신 데이터 동기화 완료!");
+                console.log("March 2026 Data Check:", data.filter(d => d.month === '2026-03'));
             } catch (err) {
                 console.error("Fetch Error:", err);
                 showToast(`오류: ${err.message}`);
@@ -277,12 +282,11 @@
                 const row = parseCSVRow(lines[i]);
                 const monthRaw = row[columnMap["귀속월"]]?.trim();
                 
-                // 날짜 감지 정규식 개선: YYYY.M, YYYY.MM, YYYY-M, YYYY-MM 등 모든 숫자 기반 날짜 패턴
                 if (monthRaw) {
                     const dateMatch = monthRaw.match(/(\d{4})[.년\s-]*(\d{1,2})/);
                     if (dateMatch) {
                         const year = dateMatch[1];
-                        const month = dateMatch[2].padStart(2, '0'); // '1' -> '01' 보정
+                        const month = dateMatch[2].padStart(2, '0');
                         const cleanMonth = `${year}-${month}`;
 
                         const entry = { month: cleanMonth };
@@ -303,7 +307,6 @@
                 }
             }
 
-            // 3. 월별 데이터 병합 및 정렬
             const merged = results.reduce((acc, cur) => {
                 const existing = acc.find(x => x.month === cur.month);
                 if (existing) {
@@ -348,7 +351,6 @@
             
             if (current.length === 0) {
                 showToast("선택한 기간에 데이터가 없습니다.");
-                // 데이터 없을 시 대시보드 리셋
                 renderKPIs([], [], compType);
                 renderCharts([], []);
                 renderTable([], []);
