@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>라인도이치 프리미엄 투자제안서</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* CSS VARIABLES */
+        :root {
+            --bg-deep: #050b14;
+            --bg-panel: rgba(15, 23, 42, 0.7);
+            --gold-primary: #D4AF37;
+            --gold-gradient: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #996515 100%);
+            --text-main: #F8FAFC;
+            --text-sub: #94A3B8;
+            --accent-blue: #0ea5e9;
+            --border-light: rgba(212, 175, 55, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --blur: blur(16px);
+        }
+
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #000;
+            color: var(--text-main);
+            overflow-x: hidden;
+            /* Scroll Snap */
+            scroll-snap-type: y mandatory;
+            height: 100vh;
+            overflow-y: scroll;
+        }
+
+        /* SLIDE CONTAINER */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            padding: 4rem 6rem;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 0% 100%, rgba(14, 165, 233, 0.05) 0%, transparent 40%);
+            overflow: hidden;
+        }
+
+        /* GLOBAL ELEMENTS */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 10;
+        }
+        .slide-number {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 5rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.05);
+            position: absolute;
+            top: -30px;
+            left: -20px;
+            z-index: 0;
+            letter-spacing: -2px;
+        }
+        .slide-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1;
+            position: relative;
+        }
+        .slide-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 35px;
+            background: var(--gold-gradient);
+            border-radius: 3px;
+        }
+        .slide-subtitle {
+            font-size: 1rem;
+            color: var(--gold-primary);
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* LAYOUTS */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; height: 100%; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        .grid-4-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+        /* CARDS & GLASSMORPHISM */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .glass-card h3 {
+            color: var(--gold-primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .glass-card p, .glass-card li {
+            color: var(--text-sub);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .glass-card ul { list-style: none; margin-top: 1rem; }
+        .glass-card li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        .glass-card li::before {
+            content: '\f054'; /* FontAwesome chevron-right */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 0.8rem;
+            color: var(--gold-primary);
+        }
+
+        /* IMAGES */
+        .image-box {
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-light);
+            height: 100%;
+        }
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+            transition: filter 0.5s ease;
+        }
+        .image-box:hover img { filter: brightness(1.1); }
+        
+        .overlay-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: white;
+        }
+
+        /* SPECIFIC SLIDES */
+        /* Title Slide */
+        #slide-1 {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(5, 11, 20, 0.85), rgba(5, 11, 20, 0.95)), url('https://images.unsplash.com/photo-1544928147-79a2dbc1f389?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover;
+        }
+        .main-title {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin-bottom: 1rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .sub-title {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            font-weight: 300;
+            margin-bottom: 3rem;
+        }
+        .brand-logo i { font-size: 3rem; color: var(--gold-primary); margin-bottom: 2rem; }
+
+        /* Process/Arrow Map */
+        .process-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--glass-border);
+        }
+        .process-arrow .step { font-weight: 700; color: var(--gold-primary); font-size: 1.2rem; width: 100px;}
+        .process-arrow .desc { color: var(--text-main); flex: 1; font-size: 1.1rem; }
+        .process-arrow i { color: var(--text-sub); }
+
+        /* Data Visualization */
+        .stat-box { text-align: center; }
+        .stat-num { font-size: 3.5rem; font-weight: 800; color: var(--gold-primary); font-family: 'Montserrat', sans-serif;}
+        .stat-label { font-size: 1.1rem; color: var(--text-sub); }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding-top: 40px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(212, 175, 55, 0.3);
+        }
+        .time-node {
+            width: 23%;
+            background: var(--glass-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-top: 3px solid var(--gold-primary);
+            position: relative;
+        }
+        .time-node::before {
+            content: '';
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--gold-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 제안개요 -->
+    <section class="slide" id="slide-1">
+        <div class="brand-logo"><i class="fa-solid fa-droplet"></i> <i class="fa-solid fa-leaf"></i></div>
+        <h1 class="main-title">REIN DEUTSCH</h1>
+        <h2 class="sub-title">통영 특화 푸드테크 · 바이오 헬스케어 기반<br><strong>캐주얼 비어스파 플래그십 사업</strong></h2>
+        <div class="glass-card" style="display:inline-block; margin-top:2rem; padding: 1rem 3rem;">
+            <p style="color:var(--gold-primary); font-weight:600; font-size:1.2rem;">INVESTMENT PITCH DECK</p>
+        </div>
+    </section>
+
+    <!-- 2. 사업 추진 배경 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">02</div>
+            <h2 class="slide-title">사업 추진 배경</h2>
+            <div class="slide-subtitle">Background</div>
+        </div>
+        <div class="content grid-3">
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-beer-mug-empty"></i> 로컬 브루어리의 한계 극복</h3>
+                <p>단순 병/캔맥주 판매 및 펍 운영 방식의 낮은 객단가와 유통망 확장의 한계 존재. <strong>수제맥주를 체험형 리테일과 뷰티 제품으로 고도화</strong>할 필요성 증대.</p>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-person-walking-luggage"></i> 관광 트렌드 변화</h3>
+                <p>통영 도보 관광객을 위한 휴식 공간 부족. 단순 관람을 넘어 오감을 자극하고 <strong>인스타그래머블(Instagrammable)한 복합 웰니스 체험</strong> 수요 급증.</p>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-gem"></i> 지역 자원 가치 밸류업</h3>
+                <p>통영 굴(미네랄, 타우린)과 맥주 효모(베타글루칸)의 뛰어난 성분을 단순 식품 소비에서 <strong>바이오 헬스케어 고부가가치 원료</strong>로 전환 시급.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 시장 기회 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">03</div>
+            <h2 class="slide-title">시장 기회</h2>
+            <div class="slide-subtitle">Market Opportunity</div>
+        </div>
+        <div class="content grid-4-cols" style="align-items: stretch;">
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-capsules"></i> 건기식/이너뷰티</h3>
+                <ul>
+                    <li>피부·항산화 기능성 선호도 증가</li>
+                    <li>관광지 오프라인 직매 후 온라인 재구매로 이어지는 안정적 수익 구조 형성 가능</li>
+                </ul>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-spa"></i> K-뷰티</h3>
+                <ul>
+                    <li>로컬 스토리 중심의 성분주의 뷰티 트렌드</li>
+                    <li>비어스파 체험 후 즉각적 효능 체감을 통한 현장 구매 전환율 극대화</li>
+                </ul>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-wine-glass"></i> 수제맥주 프리미엄</h3>
+                <ul>
+                    <li>희소성, 지역성 기반 한정판 소비 선호</li>
+                    <li>호텔, 파인다이닝 등 프리미엄 B2B 채널 납품 용이 (Oyster Stout)</li>
+                </ul>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-store"></i> 체험형 리테일</h3>
+                <ul>
+                    <li>단순 판매 매장에서 통합 경험 플래그십으로의 리테일 4.0 진화</li>
+                    <li>매장 자체가 강력한 바이럴 홍보 매체로 작동</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. 문제 인식 (Updated Text) -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">04</div>
+            <h2 class="slide-title">문제 인식</h2>
+            <div class="slide-subtitle">Problem Definition</div>
+        </div>
+        <div class="content grid-4">
+            <div class="glass-card" style="border-left: 4px solid #ef4444;">
+                <h3 style="color:#fca5a5;">4-1. 단순 주류 판매의 한계</h3>
+                <ul>
+                    <li><strong>[수익 구조의 한계]</strong> 단순 주류(병·캔) 판매 위주로 유통 확장 및 객단가 상승 제약</li>
+                    <li><strong>[고객 접점 부재]</strong> 1회성 소비에 그쳐, 브랜드 경험 전달 및 재구매 유도 장치 미흡</li>
+                </ul>
+            </div>
+            <div class="glass-card" style="border-left: 4px solid #ef4444;">
+                <h3 style="color:#fca5a5;">4-2. 관광지 체험형 공간 부족</h3>
+                <ul>
+                    <li><strong>[체험 인프라 부족]</strong> 도보 관광객이 단시간 휴식하며 로컬 제품을 경험할 복합 공간 부재</li>
+                    <li><strong>[차별화 콘텐츠 미비]</strong> 통영 원료·수제맥주·뷰티를 결합한 특화 휴식형 콘텐츠 전무</li>
+                </ul>
+            </div>
+            <div class="glass-card" style="border-left: 4px solid #ef4444;">
+                <h3 style="color:#fca5a5;">4-3. 지역 원료 고부가 제품화 부족</h3>
+                <ul>
+                    <li><strong>[원물 위주 소비]</strong> 통영 굴·맥주 효모의 우수한 기능성 대비 프리미엄 상용화 사례 부족</li>
+                    <li><strong>[밸류업 한계]</strong> 단순 식재료/부산물이 아닌 바이오·체험 서비스로 전환하는 통합 상용화 모델 부재</li>
+                </ul>
+            </div>
+            <div class="glass-card" style="border-left: 4px solid #ef4444;">
+                <h3 style="color:#fca5a5;">4-4. 관광 기념품의 낮은 차별성</h3>
+                <ul>
+                    <li><strong>[일회성 소비 고착]</strong> 기존 관광 굿즈는 가격 경쟁 중심의 단순 기념품에 불과</li>
+                    <li><strong>[확장성 한계]</strong> B2B 납품 확장 및 온라인 재구매로 이어지는 선순환 구조 취약</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 해결 전략 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">05</div>
+            <h2 class="slide-title">해결 전략</h2>
+            <div class="slide-subtitle">Solution Strategy</div>
+        </div>
+        <div class="content grid-2" style="align-items:center;">
+            <div class="image-box">
+                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Spa and Wellness Solution">
+                <div class="overlay-text">
+                    <h3 style="color:var(--gold-primary); margin-bottom:10px;">The Ultimate Synergy</h3>
+                    <p>F&B + Cosmetics + Experiential Space</p>
+                </div>
+            </div>
+            <div>
+                <div class="process-arrow">
+                    <span class="step">통영 굴/효모</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span class="desc">고기능성 원료 추출 (특허 기술)</span>
+                </div>
+                <div class="process-arrow">
+                    <span class="step">제품 라인업</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span class="desc">프리미엄 맥주, 뷰티, 이너뷰티 양산</span>
+                </div>
+                <div class="process-arrow">
+                    <span class="step">플래그십 스토어</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span class="desc">비어스파 체험을 통한 효능 즉각 체감</span>
+                </div>
+                <div class="process-arrow">
+                    <span class="step">선순환 구조</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span class="desc">온라인 정기 구독 및 B2B 시장 확장</span>
+                </div>
+                <p style="margin-top:2rem; font-size:1.2rem; color:var(--text-sub);">
+                    <i class="fa-solid fa-quote-left" style="color:var(--gold-primary);"></i>
+                    단편적 제품 판매가 아닌, 소비자의 라이프스타일에 스며드는 <strong>통합 웰니스 솔루션</strong>을 제공합니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 핵심 제품 및 서비스 (4분할) -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">06</div>
+            <h2 class="slide-title">핵심 제품 및 서비스</h2>
+            <div class="slide-subtitle">Core Products & Services</div>
+        </div>
+        <div class="content grid-4-cols" style="gap:1rem;">
+            <!-- 6-1 -->
+            <div class="image-box">
+                <img src="https://images.unsplash.com/photo-1575037614876-c38556ec72b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Craft Beer">
+                <div class="overlay-text" style="background: rgba(0,0,0,0.8); height:100%; display:flex; flex-direction:column; justify-content:flex-end;">
+                    <h3 style="color:var(--gold-primary); font-size:1.3rem;">6-1. 오이스터 스타우트</h3>
+                    <p style="font-size:0.9rem; margin-top:10px;">동결건조 공법으로 이취를 제거한 프리미엄 논-피쉬(Non-fishy) 흑맥주. B2B 호텔 타겟팅.</p>
+                </div>
+            </div>
+            <!-- 6-2 -->
+            <div class="image-box">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Inner Beauty">
+                <div class="overlay-text" style="background: rgba(0,0,0,0.8); height:100%; display:flex; flex-direction:column; justify-content:flex-end;">
+                    <h3 style="color:var(--gold-primary); font-size:1.3rem;">6-2. 이너뷰티 건기식</h3>
+                    <p style="font-size:0.9rem; margin-top:10px;">굴가수분해물 기반 스틱/젤리. 피부 건강 특화 관광 선물 및 온라인 구독 상품.</p>
+                </div>
+            </div>
+            <!-- 6-3 -->
+            <div class="image-box">
+                <img src="https://images.unsplash.com/photo-1615397323635-df4d75479ac9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Outer Beauty">
+                <div class="overlay-text" style="background: rgba(0,0,0,0.8); height:100%; display:flex; flex-direction:column; justify-content:flex-end;">
+                    <h3 style="color:var(--gold-primary); font-size:1.3rem;">6-3. 아우터뷰티 제품</h3>
+                    <p style="font-size:0.9rem; margin-top:10px;">효모 베이스 고기능성 풋/핸드크림, 진정 마스크팩. 현장 체험 연계 즉시 구매 유도.</p>
+                </div>
+            </div>
+            <!-- 6-4 -->
+            <div class="image-box">
+                <img src="https://images.unsplash.com/photo-1515362778563-6a8d0e44bc0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Beer Spa">
+                <div class="overlay-text" style="background: rgba(0,0,0,0.8); height:100%; display:flex; flex-direction:column; justify-content:flex-end;">
+                    <h3 style="color:var(--gold-primary); font-size:1.3rem;">6-4. 캐주얼 비어스파</h3>
+                    <p style="font-size:0.9rem; margin-top:10px;">족욕+맥주 시음+뷰티 테스트가 하나로 통합된 오프라인 플래그십 체류 공간.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. 비즈니스 모델 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">07</div>
+            <h2 class="slide-title">비즈니스 모델</h2>
+            <div class="slide-subtitle">Business Model & Revenue Streams</div>
+        </div>
+        <div class="content">
+            <div class="glass-card" style="display:flex; justify-content: space-around; align-items:center; padding: 4rem;">
+                <div class="stat-box">
+                    <i class="fa-solid fa-store stat-num"></i>
+                    <h4 style="font-size:1.5rem; margin:15px 0;">오프라인 체험 매출</h4>
+                    <p class="stat-label">비어스파 이용권<br>+ 식음료 현장 결제</p>
+                </div>
+                <i class="fa-solid fa-plus" style="font-size:2rem; color:var(--text-sub);"></i>
+                <div class="stat-box">
+                    <i class="fa-solid fa-bag-shopping stat-num"></i>
+                    <h4 style="font-size:1.5rem; margin:15px 0;">현장 제품 리테일</h4>
+                    <p class="stat-label">체험 후 뷰티/건기식<br>기념품 고단가 즉시 전환</p>
+                </div>
+                <i class="fa-solid fa-plus" style="font-size:2rem; color:var(--text-sub);"></i>
+                <div class="stat-box">
+                    <i class="fa-solid fa-laptop-mobile stat-num"></i>
+                    <h4 style="font-size:1.5rem; margin:15px 0;">온라인 D2C & B2B</h4>
+                    <p class="stat-label">자사몰 정기 구독<br>+ 호텔 어메니티 납품</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. 경쟁력 및 차별성 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">08</div>
+            <h2 class="slide-title">경쟁력 및 차별성</h2>
+            <div class="slide-subtitle">Competitive Edge</div>
+        </div>
+        <div class="content grid-2">
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-award"></i> R&D 및 품질 우위</h3>
+                <ul>
+                    <li>독일 400년 전통 Debusus 양조 기법 적용</li>
+                    <li>2025 KIBA 국제 맥주대회 금메달 수상 검증</li>
+                    <li>굴 이취 제거 및 유효 성분 추출 특허 출원 예정</li>
+                </ul>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-network-wired"></i> 기존 유통망과의 강력한 시너지</h3>
+                <ul>
+                    <li>(주)일공푸드 등 기존 수산물 이커머스 운영 노하우</li>
+                    <li>네이버 쇼핑 카테고리 1위 달성 경험의 온라인 세일즈 역량</li>
+                    <li>확보된 기존 고객 DB를 활용한 초기 크로스 셀링(Cross-selling)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. 투자 유치 계획 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">09</div>
+            <h2 class="slide-title">투자 유치 계획</h2>
+            <div class="slide-subtitle">Investment Plan</div>
+        </div>
+        <div class="content grid-2">
+            <div>
+                <h3 style="font-size:3rem; color:var(--gold-primary); margin-bottom:1rem;">₩ 500,000,000</h3>
+                <p style="font-size:1.2rem; color:var(--text-main);">목표 투자 유치액 (시드 확장 단계)</p>
+                <div class="glass-card" style="margin-top:2rem;">
+                    <h4 style="color:var(--text-main); margin-bottom:1rem;">자금 조달 목적</h4>
+                    <p>단순 매장 인테리어가 아닌, **제품 양산 - 체험 거점 구축 - B2B 확장**으로 이어지는 핵심 스케일업 자금</p>
+                </div>
+            </div>
+            <div class="glass-card">
+                <h3 style="margin-bottom:20px;">Use of Funds</h3>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid var(--border-light); padding-bottom:10px;">
+                    <span style="color:var(--text-main); font-weight:bold;">1. 신제품 R&D 및 초도 양산</span>
+                    <span style="color:var(--gold-primary);">40% (2.0억)</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid var(--border-light); padding-bottom:10px;">
+                    <span style="color:var(--text-main); font-weight:bold;">2. 캐주얼 비어스파 구축</span>
+                    <span style="color:var(--gold-primary);">30% (1.5억)</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid var(--border-light); padding-bottom:10px;">
+                    <span style="color:var(--text-main); font-weight:bold;">3. 온/오프라인 마케팅 강화</span>
+                    <span style="color:var(--gold-primary);">20% (1.0억)</span>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-main); font-weight:bold;">4. 예비비 및 운영 자금</span>
+                    <span style="color:var(--gold-primary);">10% (0.5억)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. 성장 전략 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">10</div>
+            <h2 class="slide-title">성장 전략</h2>
+            <div class="slide-subtitle">Growth Roadmap</div>
+        </div>
+        <div class="content">
+            <div class="timeline">
+                <div class="time-node">
+                    <h4 style="color:var(--gold-primary); font-size:1.2rem; margin-bottom:10px;">Phase 1: Launch</h4>
+                    <p>통영 1호점 플래그십 오픈<br>뷰티/주류 6종 라인업 출시</p>
+                </div>
+                <div class="time-node">
+                    <h4 style="color:var(--gold-primary); font-size:1.2rem; margin-bottom:10px;">Phase 2: Scale D2C/B2B</h4>
+                    <p>자사몰 정기 구독 활성화<br>호텔/골프장 어메니티 진입</p>
+                </div>
+                <div class="time-node">
+                    <h4 style="color:var(--gold-primary); font-size:1.2rem; margin-bottom:10px;">Phase 3: Franchise</h4>
+                    <p>제주, 부산 등 주요 관광지<br>비어스파 거점 가맹 확대</p>
+                </div>
+                <div class="time-node">
+                    <h4 style="color:var(--gold-primary); font-size:1.2rem; margin-bottom:10px;">Phase 4: Global</h4>
+                    <p>K-Wellness 뷰티 브랜드화<br>아시아권 리조트 수출</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. 마케팅 전략 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">11</div>
+            <h2 class="slide-title">마케팅 전략</h2>
+            <div class="slide-subtitle">Marketing Strategy</div>
+        </div>
+        <div class="content grid-3">
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-hashtag"></i> 인스타그래머블 포인팅</h3>
+                <p>비어스파 내 시그니처 포토존 구성. #통영비어스파 #오이스터스타우트 자발적 해시태그 바이럴 유도.</p>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-handshake-angle"></i> 로컬 크로스 마케팅</h3>
+                <p>통영 케이블카, 디피랑 등 주요 관광지 인프라와 제휴. 당일 영수증 지참 시 족욕 할인 등 트래픽 공유.</p>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-database"></i> 데이터 기반 리타겟팅</h3>
+                <p>현장 체험 고객 DB 확보. 귀가 후 온라인 전용 할인 쿠폰 발송으로 뷰티/건기식 재구매 퍼널 완성.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. 운영 계획 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">12</div>
+            <h2 class="slide-title">운영 계획</h2>
+            <div class="slide-subtitle">Operations Plan</div>
+        </div>
+        <div class="content grid-2">
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-industry"></i> 생산 및 SCM 최적화</h3>
+                <ul>
+                    <li><strong>주류:</strong> 자사 브루어리 기반 소량 생산 + OEM 대량 생산 투트랙</li>
+                    <li><strong>뷰티/건기식:</strong> 검증된 CGMP/HACCP 인증 파트너사 위탁 생산</li>
+                    <li>일공푸드 자체 물류창고 및 콜드체인 시스템 공유로 물류비 절감</li>
+                </ul>
+            </div>
+            <div class="glass-card">
+                <h3><i class="fa-solid fa-people-roof"></i> 공간 운영 및 CS</h3>
+                <ul>
+                    <li>비어스파 전용 무인 예약 및 키오스크 결제 시스템 도입</li>
+                    <li>체험 안내 전담 '스파 소믈리에' 크루 육성</li>
+                    <li>기존 이커머스 CS 팀을 활용한 온라인 대응 일원화</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13. 팀 구성 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">13</div>
+            <h2 class="slide-title">팀 구성</h2>
+            <div class="slide-subtitle">Our Team</div>
+        </div>
+        <div class="content">
+            <div class="glass-card" style="text-align:center; padding:4rem;">
+                <i class="fa-solid fa-users" style="font-size:4rem; color:var(--gold-primary); margin-bottom:2rem;"></i>
+                <h3 style="font-size:1.8rem; justify-content:center;">이커머스 실행력 × 브랜딩 전문성</h3>
+                <p style="font-size:1.2rem; max-width:800px; margin:0 auto; margin-top:20px;">
+                    네이버 쇼핑 1위 수산 브랜드 '일공푸드'를 성공시킨 <strong>손무성 대표</strong>의 폭발적인 온·오프라인 실행력과,<br> 
+                    (주)더큐알 <strong>정영민 대표</strong>의 강력한 브랜드 인큐베이팅 노하우가 결합하여<br>
+                    가장 빠르고 확실하게 시장 검증 및 스케일업을 달성합니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. 리스크 및 대응 전략 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">14</div>
+            <h2 class="slide-title">리스크 및 대응 전략</h2>
+            <div class="slide-subtitle">Risk Management</div>
+        </div>
+        <div class="content grid-3">
+            <div class="glass-card">
+                <h3 style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> 굴/효모 호불호 이슈</h3>
+                <p><strong>대응:</strong> 특허 출원 예정인 이취 제거 기술 적용. 철저한 블라인드 테스트를 거친 대중적 풍미(향/발림성) 구현.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> 관광지 비수기 매출 하락</h3>
+                <p><strong>대응:</strong> 오프라인 의존도를 낮추기 위해 자사몰 정기구독(이너뷰티) 및 기업 복지몰/B2B 납품 비중 40% 이상 유지.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> 유사 카피캣 등장</h3>
+                <p><strong>대응:</strong> 레시피/원료 특허 포트폴리오 구축. 통영시 로컬 크리에이터 연계 및 선점 효과를 통한 오리지널리티 방어.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. 재무 및 매출 전망 -->
+    <section class="slide">
+        <div class="slide-header">
+            <div class="slide-number">15</div>
+            <h2 class="slide-title">재무 및 매출 전망</h2>
+            <div class="slide-subtitle">Financial Projections</div>
+        </div>
+        <div class="content grid-2">
+            <div class="glass-card" style="display:flex; flex-direction:column; justify-content:center;">
+                <h3 style="font-size:2rem; margin-bottom:1rem;">Year 3 Target</h3>
+                <div class="stat-num" style="font-size:4rem; margin-bottom:10px;">₩ 30.0<span style="font-size:2rem;">억</span></div>
+                <p>영업이익률 목표: 25% 이상</p>
+                <ul style="margin-top:20px;">
+                    <li><strong>Y1:</strong> 플래그십 런칭 및 초기 제품 세일즈 (BEP 달성)</li>
+                    <li><strong>Y2:</strong> B2B 채널 본격 진입 및 자사몰 회원 1만명 확보</li>
+                    <li><strong>Y3:</strong> 타 지역 플래그십 가맹 오픈 및 매출 수직 상승</li>
+                </ul>
+            </div>
+            <div class="image-box">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Financial Graph">
+            </div>
+        </div>
+    </section>
+
+    <!-- 16. 결론 -->
+    <section class="slide" id="slide-16">
+        <div class="content" style="justify-content:center; align-items:center; text-align:center; padding-top:4rem;">
+            <i class="fa-solid fa-ship" style="font-size:5rem; color:var(--gold-primary); margin-bottom:2rem;"></i>
+            <h2 style="font-size:3.5rem; font-weight:900; margin-bottom:1rem; letter-spacing:2px;">Beyond the Local,<br>Into the <span style="color:var(--gold-primary);">Lifestyle</span></h2>
+            <p style="font-size:1.5rem; color:var(--text-sub); max-width:800px; margin-bottom:3rem;">
+                라인도이치는 통영의 자원을 <strong>가장 혁신적인 방식</strong>으로 엮어냅니다.<br>
+                먹고, 마시고, 바르는 전에 없던 웰니스 경험에 함께해 주십시오.
+            </p>
+            <div class="glass-card" style="display:inline-block; padding: 1.5rem 3rem;">
+                <p style="font-size:1.2rem; color:var(--text-main);">
+                    <strong>대표이사:</strong> 손무성<br>
+                    <strong>브랜딩 총괄:</strong> 정영민
+                </p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
+```
